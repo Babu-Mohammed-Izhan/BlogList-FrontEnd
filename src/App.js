@@ -101,7 +101,9 @@ const App = () => {
             username={username}
             createBlog={createBlog}
           />
-          <Button variant="contained" colour="primary" onClick={() => setblogVisible(false)}>cancel</Button>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <Button variant="contained" colour="primary" onClick={() => setblogVisible(false)}>cancel</Button>
+          </div>
         </div>
       </div>
     )
