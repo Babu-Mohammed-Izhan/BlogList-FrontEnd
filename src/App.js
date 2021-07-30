@@ -8,7 +8,21 @@ import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
 import RegisterForm from './components/Register'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
-import { Typography, Button, Container } from '@material-ui/core'
+import { Typography, Button, Container, AppBar, Toolbar, makeStyles, Grid } from '@material-ui/core'
+
+
+const useStyles = makeStyles((theme) => ({
+
+  menuButton: {
+    marginRight: theme.spacing(2),
+  },
+  title: {
+    flexGrow: 1,
+  },
+  mainpage: {
+    marginTop: "100px"
+  }
+}))
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -18,6 +32,7 @@ const App = () => {
   const [errormessage, setErrormessage] = useState(null)
   const [message, setMessage] = useState(null)
   const [blogVisible, setblogVisible] = useState(false)
+  const classes = useStyles()
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
@@ -61,8 +76,6 @@ const App = () => {
 
   const handleRegister = async (event) => {
     event.preventDefault()
-    console.log("This works")
-    console.log(username, password)
     try {
       const newuser = await registerService.register({
         username: username, password: password
@@ -75,7 +88,7 @@ const App = () => {
       }, 5000)
       setPassword('')
     } catch (exception) {
-      console.log(exception.response.data)
+      setErrormessage(exception.response.data.error)
       setTimeout(() => {
         setErrormessage(null)
       }, 5000)
@@ -170,39 +183,64 @@ const App = () => {
     }
   }
 
+
   return (
     <Router>
-      <div className="app">
-        <Typography style={{ fontSize: "70px", margin: '0px' }}>Web Dev Diaries</Typography>
+      <div className={classes.root}>
         <Notification message={message} errormessage={errormessage} />
         {user === null ?
-          <Switch>
-            <Route exact path="/">
-              <LoginForm
-                username={username}
-                password={password}
-                handleUsernameChange={({ target }) => setUsername(target.value)}
-                handlePasswordChange={({ target }) => setPassword(target.value)}
-                handleSubmit={handleLogin} />
-            </Route>
-            <Route exact path="/register">
-              <RegisterForm
-                handleRegister={handleRegister}
-                handleRegisterUsernameChange={({ target }) => setUsername(target.value)}
-                handleRegisterPasswordChange={({ target }) => setPassword(target.value)}
-                Registerusername={username}
-                Registerpassword={password} />
-            </Route>
-          </Switch> :
           <Container>
-            <div style={{ display: "flex", alignItems: "center", flexDirection: "column", margin: "20px" }}>
-              <Typography align="center" >{user.username} is logged-in</Typography>
-              <Button color="secondary" variant="outlined" onClick={handleLogout}>Logout</Button>
-            </div>
-            {blogForm()}
-            {blogs.map(blog =>
-              <Blog key={blog.id} blog={blog} handleLike={handleLike} handleDelete={handleDelete} />
-            )}
+            <AppBar position="fixed">
+              <Toolbar>
+                <Typography variant="h6" edge="start" className={classes.title}>
+                  Web Dev Diaries
+                </Typography>
+              </Toolbar>
+            </AppBar>
+            <Switch>
+              <Route exact path="/">
+                <LoginForm
+                  username={username}
+                  password={password}
+                  handleUsernameChange={({ target }) => setUsername(target.value)}
+                  handlePasswordChange={({ target }) => setPassword(target.value)}
+                  handleSubmit={handleLogin} />
+              </Route>
+              <Route exact path="/register">
+                <RegisterForm
+                  handleRegister={handleRegister}
+                  handleRegisterUsernameChange={({ target }) => setUsername(target.value)}
+                  handleRegisterPasswordChange={({ target }) => setPassword(target.value)}
+                  Registerusername={username}
+                  Registerpassword={password} />
+              </Route>
+            </Switch>
+          </Container> :
+          <Container>
+            <AppBar position="fixed">
+              <Toolbar>
+                <Typography variant="h6" edge="start" className={classes.title}>
+                  Web Dev Diaries
+                </Typography>
+                <Typography >{user.username}</Typography>
+                <Button color="inherit" onClick={handleLogout}>Logout</Button>
+              </Toolbar>
+            </AppBar>
+            <Container className={classes.mainpage}>
+              <Grid container spacing={3}>
+                {blogs.map(blog => {
+                  return (
+                    <Grid item key={blog.id} xs={12} sm={12} md={6} direction="row"
+                      justifyContent="center"
+                      alignItems="center">
+                      <Blog key={blog.id} blog={blog} handleLike={handleLike} handleDelete={handleDelete} />
+                    </Grid>
+                  )
+                }
+                )}
+              </Grid>
+              {blogForm()}
+            </Container>
           </Container>
         }
       </div>

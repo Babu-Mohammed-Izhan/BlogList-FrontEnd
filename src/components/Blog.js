@@ -1,11 +1,12 @@
 import React from 'react'
-import Togglable from './Togglable'
 import { Card, Button, Typography, CardContent, makeStyles, Link } from '@material-ui/core'
+import ThumbUpIcon from '@material-ui/icons/ThumbUp'
+import DeleteIcon from '@material-ui/icons/Delete'
 
 const useStyles = makeStyles(() => ({
   blog: {
     padding: '20px',
-    margin: '20px'
+    margin: '20px',
   }
 }))
 
@@ -14,16 +15,15 @@ const Blog = ({ blog, handleLike, handleDelete }) => {
   const classes = useStyles()
 
   return (
-    <Card variant="outlined" className={classes.blog}>
-      <CardContent>
-        <Typography variant="h4" className="title">{blog.title}</Typography>
-        <Typography variant="h5" className="author">{blog.author}</Typography>
-        <Togglable buttonLabel="view">
+    <Card className={classes.blog}>
+      <CardContent >
+        <div style={{ "marginLeft": "25px" }}>
+          <Typography className="title">{blog.title}</Typography>
+          <Typography className="author">{blog.author}</Typography>
           <Link href={blog.url}>{blog.url}</Link>
-          <Typography>likes {blog.likes} <Button size="small" variant="outlined" color="primary" onClick={() => handleLike(blog)} className="like">like</Button> </Typography>
-          <div>{}</div>
-          <Button color="secondary" variant="outlined" size="small" onClick={() => handleDelete(blog)}>Delete</Button>
-        </Togglable>
+          <Typography variant="h6">{blog.likes}   <Button size="small" color="primary" onClick={() => handleLike(blog)} className="like"><ThumbUpIcon color="primary" /></Button></Typography>
+        </div>
+        <Button color="secondary" size="small" onClick={() => handleDelete(blog)}><DeleteIcon color="secondary" /></Button>
       </CardContent>
     </Card>
 

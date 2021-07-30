@@ -39,10 +39,10 @@ const RegisterForm = ({
     const classes = useStyles()
 
     return (
-        <Container component="main" maxWidth="xs">
+        <Container component="main" maxWidth="xs" className={classes.paper}>
             <CssBaseline />
             <div className={classes.paper}>
-                <Typography component="h1" variant="h5">
+                <Typography component="h1" variant="h4">
                     Sign up
         </Typography>
                 <form className={classes.form} onSubmit={handleRegister} noValidate>
